@@ -26,15 +26,24 @@ const useUsersStore = create<UsersState>((set) => ({
 
 const useCommentsStore = create(() => ({}));
 
-function App () {
-  const users = useUsersStore(state => state.users)
-  const addUser = useUsersStore(state => state.addUser)
+function App() {
+  const users = useUsersStore((state) => state.users);
+  const addUser = useUsersStore((state) => state.addUser);
+
+  const onBtnClick = () => {
+    addUser("new user");
+  };
 
   return (
     <div className="App">
-
+      {users.map((user) => (
+        <div>
+          {user.id}. {user.username}
+        </div>
+      ))}
+      <button onClick={onBtnClick}>click</button>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
