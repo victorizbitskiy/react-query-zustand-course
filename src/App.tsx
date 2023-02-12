@@ -1,3 +1,4 @@
+import {immer} from "zustand/middleware/immer";
 import { useEffect } from "react";
 import { create } from "zustand";
 
@@ -14,22 +15,22 @@ interface UsersState {
   fetchUsers: () => void;
 }
 
-const useUsersStore = create<UsersState>((set) => ({
-  users: [],
-  currentUser: null,
-  settings: {},
-  isLoading: false,
-  errors: [],
-  addUser: (username: string) =>
-    set((state) => ({
-      users: [...state.users, { id: Date.now(), username }],
-    })),
-  fetchUsers: async () => {
-    const result = await fetch("https://jsonplaceholder.typicode.com/users");
-    const json = (await result.json()) as User[];
-    set({ users: json });
-  },
-}));
+const useUsersStore = create<UsersState>()(
+  immer((set) => ({
+    users: [],
+    isLoading: false,
+    errors: [],
+    addUser: (username: string) =>
+      set((state) => {
+        state.users.push({ id: Date.now(), username });
+      }),
+    fetchUsers: async () => {
+      const result = await fetch("https://jsonplaceholder.typicode.com/users");
+      const json = (await result.json()) as User[];
+      set({ users: json });
+    },
+  }))
+);
 
 const useCommentsStore = create(() => ({}));
 
