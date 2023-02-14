@@ -1,4 +1,5 @@
 import {immer} from "zustand/middleware/immer";
+import {devtools} from "zustand/middleware"
 import { useEffect } from "react";
 import { create } from "zustand";
 
@@ -16,6 +17,7 @@ interface UsersState {
 }
 
 const useUsersStore = create<UsersState>()(
+  devtools(
   immer((set) => ({
     users: [],
     isLoading: false,
@@ -29,7 +31,7 @@ const useUsersStore = create<UsersState>()(
       const json = (await result.json()) as User[];
       set({ users: json });
     },
-  }))
+  })))
 );
 
 const useCommentsStore = create(() => ({}));
